@@ -12,4 +12,5 @@ export const storesOptions: readonly IStoreOption[] = [
   { value: 'city_market', label: 'City Market' },
   { value: 'fresko', label: 'Fresko' },
   { value: 'comer', label: 'La Comer' },
+  { value: 'others', label: 'Otros' },
 ];
