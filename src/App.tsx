@@ -135,7 +135,7 @@ function App() {
     let totalAmount = 0.0;
 
     productsToBuy.map((product) => {
-      totalAmount += product?.price;
+      totalAmount += Number(product?.price);
     });
     return totalAmount;
   };
