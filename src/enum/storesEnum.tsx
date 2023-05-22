@@ -10,4 +10,5 @@ export enum Stores {
   city_market = 'City Market' as any,
   fresko = 'Fresko' as any,
   comer = 'La Comer' as any,
+  others = 'Otros' as any,
 }

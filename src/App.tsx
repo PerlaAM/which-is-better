@@ -59,6 +59,7 @@ function App() {
     enableReinitialize: true,
     initialValues: {
       productName: keepProduct.productName,
+      variant: '',
       storeName: keepProduct.storeName,
       productUrl: '',
       price: 0.0,
@@ -77,6 +78,7 @@ function App() {
     let newProduct = {
       id: values?.productName + values?.quantity + Math.random(),
       productName: values?.productName,
+      variant: values?.variant,
       storeName: values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
@@ -206,23 +208,42 @@ function App() {
               <h2 className='m-0 text-dark'>New product</h2>
             </div>
             <form onSubmit={formik.handleSubmit}>
-              <div className='w-100 d-flex flex-column mb-3'>
-                <label htmlFor='productName'>Product name</label>
-                <div className='w-100 d-flex flex-column'>
-                  <input
-                    id='productName'
-                    name='productName'
-                    className='form-control'
-                    autoComplete='off'
-                    type='text'
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.productName || keepProduct.productName}
-                  />
-                  <ErrorValidation
-                    message={formik.errors.productName}
-                    touched={formik.touched.productName}
-                  />
+              <div className='d-flex'>
+                <div className='w-50 d-flex flex-column mb-3 me-2'>
+                  <label htmlFor='productName'>Product name</label>
+                  <div className='w-100 d-flex flex-column'>
+                    <input
+                      id='productName'
+                      name='productName'
+                      className='form-control'
+                      autoComplete='off'
+                      type='text'
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={
+                        formik.values.productName || keepProduct.productName
+                      }
+                    />
+                    <ErrorValidation
+                      message={formik.errors.productName}
+                      touched={formik.touched.productName}
+                    />
+                  </div>
+                </div>
+                <div className='w-50 d-flex flex-column mb-3 ms-2'>
+                  <label htmlFor='variant'>Variant</label>
+                  <div className='w-100 d-flex flex-column'>
+                    <input
+                      id='variant'
+                      name='variant'
+                      className='form-control'
+                      autoComplete='off'
+                      type='text'
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.variant}
+                    />
+                  </div>
                 </div>
               </div>
               <div className='w-100 d-flex flex-column mb-3'>
@@ -266,8 +287,8 @@ function App() {
                   value={formik.values.productUrl}
                 />
               </div>
-              <div className='d-flex'>
-                <div className='w-50 d-flex flex-column mb-3 me-'>
+              <div className='row gx-2'>
+                <div className='col-4 d-flex flex-column mb-3'>
                   <label htmlFor='price'>Price</label>
                   <CurrencyInput
                     id='price'
@@ -287,8 +308,10 @@ function App() {
                     touched={formik.touched.price}
                   />
                 </div>
-                <div className='w-50 d-flex flex-column mb-3 ms-2'>
-                  <label htmlFor='quantity'>Weight or pieces</label>
+                <div className='col-4 d-flex flex-column mb-3'>
+                  <label htmlFor='quantity' className='text-truncate'>
+                    Weight or pieces
+                  </label>
                   <input
                     id='quantity'
                     name='quantity'
@@ -304,39 +327,42 @@ function App() {
                     touched={formik.touched.quantity}
                   />
                 </div>
+                <div className='col-4 d-flex flex-column mb-3'>
+                  <label htmlFor='unitMeasure' className='text-truncate'>
+                    Unit of measure
+                  </label>
+                  <Select
+                    ref={unitMeasureRef}
+                    className='basic-single'
+                    classNamePrefix='select'
+                    theme={(theme) => ({
+                      ...theme,
+                      colors: {
+                        ...theme.colors,
+                        primary25: '#6ec4bc66',
+                        primary: '#6ec4bc',
+                      },
+                    })}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        border: 'none',
+                        background: '#6ec4bc3c',
+                      }),
+                    }}
+                    defaultValue={unitMeasureOptions[0]}
+                    name='unitMeasure'
+                    options={unitMeasures}
+                    onChange={(selectedUnitMeasure) =>
+                      formik.setFieldValue(
+                        'unitMeasure',
+                        selectedUnitMeasure?.value
+                      )
+                    }
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor='unitMeasure'>Unit of measure</label>
-                <Select
-                  ref={unitMeasureRef}
-                  className='basic-single'
-                  classNamePrefix='select'
-                  theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      primary25: '#6ec4bc66',
-                      primary: '#6ec4bc',
-                    },
-                  })}
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      border: 'none',
-                      background: '#6ec4bc3c',
-                    }),
-                  }}
-                  defaultValue={unitMeasureOptions[0]}
-                  name='unitMeasure'
-                  options={unitMeasures}
-                  onChange={(selectedUnitMeasure) =>
-                    formik.setFieldValue(
-                      'unitMeasure',
-                      selectedUnitMeasure?.value
-                    )
-                  }
-                />
-              </div>
+
               <div className='d-grid gap-2 mt-3'>
                 <Button variant='primary' size='sm' type='submit'>
                   Add product

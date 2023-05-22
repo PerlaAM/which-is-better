@@ -36,7 +36,9 @@ export default function ProductDetails(props: any) {
   return (
     <div className='p-3 bg-light-gray rounded mb-3 shadow-sm'>
       <div className='text-center mb-3'>
-        <p className='m-0 fw-light'>{props.product?.productName}</p>
+        <p className='m-0 fw-light'>
+          {props.product?.productName} {props.product?.variant}
+        </p>
         <p className='m-0 text-steal'>
           {Stores[props.product?.storeName]}
           {props.product?.productUrl && (
