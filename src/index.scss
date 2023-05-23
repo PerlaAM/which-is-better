@@ -46,6 +46,14 @@ label {
   color: #274542;
 }
 
+.dino {
+  width: 22px;
+  margin-left: 3px;
+  background-image: url(./assets/dino.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 @media only screen and (max-width: 600px) {
   .h-calc-header {
     height: 100%;
