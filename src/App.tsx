@@ -33,8 +33,10 @@ const validate = (values: any) => {
 };
 
 function App() {
+  const productNameRef: any = useRef(null);
   const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
+  const priceRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
   const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
   const [unitMeasures, setUnitMeasures] = useState(unitMeasureOptions);
@@ -70,6 +72,7 @@ function App() {
     onSubmit: (values, { resetForm }) => {
       saveFirstProduct(values);
       addProductsList(values);
+      priceRef.current.focus();
       resetForm();
     },
   });
@@ -171,6 +174,15 @@ function App() {
     localStorage.setItem('productsToBuyList', JSON.stringify(productsCartList));
   };
 
+  const handleRemoveProductList = (product: any) => {
+    setProductsList((productsList) =>
+      productsList.filter((productList) => productList.id !== product.id)
+    );
+
+    productsList.splice(productsList.indexOf(product), 1);
+    priceRef.current.focus();
+  };
+
   const handleClearProductList = () => {
     setProductsList([]);
     setKeepProduct({
@@ -190,9 +202,15 @@ function App() {
     handleCloseProductsToBuyModal();
   };
 
-  const handleShowProductsList = () => setShowProductsList(true);
+  const handleShowProductsList = () => {
+    setShowProductsList(true);
+    productNameRef.current.focus();
+  };
 
-  const handleCloseProductsList = () => setShowProductsList(false);
+  const handleCloseProductsList = () => {
+    productNameRef.current.focus();
+    setShowProductsList(false);
+  };
 
   const handleShowProductsToBuyModal = () => setShowProductsToBuyModal(true);
 
@@ -213,11 +231,13 @@ function App() {
                   <label htmlFor='productName'>Product name</label>
                   <div className='w-100 d-flex flex-column'>
                     <input
+                      ref={productNameRef}
                       id='productName'
                       name='productName'
                       className='form-control'
                       autoComplete='off'
                       type='text'
+                      autoFocus={true}
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       value={
@@ -291,6 +311,7 @@ function App() {
                 <div className='col-4 d-flex flex-column mb-3'>
                   <label htmlFor='price'>Price</label>
                   <CurrencyInput
+                    ref={priceRef}
                     id='price'
                     name='price'
                     placeholder='$0.0'
@@ -318,6 +339,7 @@ function App() {
                     className='form-control'
                     autoComplete='off'
                     type='number'
+                    step='any'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.quantity}
@@ -402,6 +424,7 @@ function App() {
                       key={index}
                       showButton={true}
                       onSelectProduct={handleAddToShopping}
+                      onRemoveProduct={handleRemoveProductList}
                     />
                   ))}
               </div>
@@ -424,13 +447,16 @@ function App() {
               <div className='overflow-scroll h-calc-cart'>
                 {productsToBuy
                   .sort((firstElement, secondElement) =>
-                    firstElement.storeName > secondElement.storeName ? 1 : -1
+                    firstElement.storeName > secondElement.storeName
+                      ? 1
+                      : -1 && firstElement.price > secondElement.price
+                      ? 1
+                      : -1
                   )
                   .map((product, index) => (
                     <ProductDetails
                       product={product}
                       key={index}
-                      showRemoveButton={true}
                       onSelectProduct={handleAddToShopping}
                       onRemoveProduct={handleRemoveProduct}
                     />
